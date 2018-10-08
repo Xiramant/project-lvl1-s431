@@ -1,4 +1,4 @@
-package main.java.games;
+package games;
 
 public class Slot {
 
