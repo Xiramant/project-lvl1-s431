@@ -8,6 +8,6 @@ compile: clear
 	javac -d ./target/classes ./src/main/java/games/Slot.java
 
 run:
-	java -cp ./target/classes main.java.games.Slot
+	java -cp ./target/classes games.Slot
 
 compile-run: compile run
