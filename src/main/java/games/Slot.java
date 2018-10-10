@@ -1,6 +1,5 @@
 package games;
 
-import java.util.ArrayList;
 import java.util.Random;
 
 //основной класс игры Однорукий бандит
@@ -10,16 +9,16 @@ public class Slot {
     private static int stack = 100;
 
     //размер ставки
-    static final int BET = 10;
+    private static final int BET = 10;
 
     //размер выигрыша
-    static final int WIN = 1000;
+    private static final int WIN = 1000;
 
     //количество барабанов в автомате
-    static final int DRUM_COUNT = 3;
+    private static final int DRUM_COUNT = 3;
 
     //количество позиций у барабанов
-    static final int DRUM_POSITION_COUNT = 7;
+    private static final int DRUM_POSITION_COUNT = 7;
 
     public static int getStack() {
         return stack;
@@ -31,12 +30,8 @@ public class Slot {
 
     public static void main(String... __) {
 
-        //лист состояний барабанов
-        ArrayList<Integer> drums = new ArrayList<>(DRUM_COUNT);
-
-        for (int i = 0; i < DRUM_COUNT; i++) {
-            drums.add(0);
-        }
+        //массив состояний барабанов
+        int[] drums = new int[DRUM_COUNT];
 
         while (getStack() > 0) {
 
@@ -48,16 +43,16 @@ public class Slot {
 
             System.out.println("Крутим барабаны!");
 
-            for (int i = 0; i < DRUM_COUNT; i++) {
+            for (int i = 0; i < drums.length; i++) {
 
-                drums.set(i, getDrumPosition(drums.get(i)));
+                drums[i] = getDrumPosition(drums[i]);
             }
 
             System.out.println("Розыгрыш принёс следующие результаты:");
 
-            for (int i = 0; i < drums.size(); i++) {
-                System.out.print((i + 1) + "-й барабан - " + drums.get(i));
-                System.out.print((i == drums.size() - 1) ? "." + System.lineSeparator() : ", ");
+            for (int i = 0; i < drums.length; i++) {
+                System.out.print((i + 1) + "-й барабан - " + drums[i]);
+                System.out.print((i == drums.length - 1) ? "." + System.lineSeparator() : ", ");
             }
 
             if (isWin(drums)) {
@@ -79,9 +74,9 @@ public class Slot {
     }
 
     //проверка выигрыша (совпадения позиций барабанов)
-    private static boolean isWin(final ArrayList<Integer> drums) {
+    private static boolean isWin(final int[] drums) {
 
-        int drumPositionFirst = drums.get(0);
+        int drumPositionFirst = drums[0];
 
         for (int drum :drums) {
 
