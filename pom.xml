@@ -31,7 +31,7 @@
         <spotbugs-maven-plugin.version>3.1.6</spotbugs-maven-plugin.version>
         <maven-pmd-plugin.version>3.10.0</maven-pmd-plugin.version>
         <sonar-maven-plugin.version>2.7.1</sonar-maven-plugin.version>
-        <maven-checkstyle-plugin>3.0.0</maven-checkstyle-plugin>
+        <maven-checkstyle-plugin.version>3.0.0</maven-checkstyle-plugin.version>
 
     </properties>
 
@@ -50,8 +50,6 @@
             <version>${commons-math3.version}</version>
             <optional>true</optional>
         </dependency>
-
-        <!-- TEST (JUnit 5 & Mockito) -->
 
     </dependencies>
 
@@ -200,16 +198,15 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-checkstyle-plugin</artifactId>
-                <version>${maven-checkstyle-plugin}</version>
+                <version>${maven-checkstyle-plugin.version}</version>
                 <executions>
                     <execution>
-                        <id>validate</id>
-                        <phase>validate</phase>
+                        <id>verify-style</id>
+                        <phase>process-classes</phase>
                         <configuration>
                             <encoding>UTF-8</encoding>
                             <consoleOutput>true</consoleOutput>
                             <failsOnError>true</failsOnError>
-                            <linkXRef>false</linkXRef>
                         </configuration>
                         <goals>
                             <goal>check</goal>
