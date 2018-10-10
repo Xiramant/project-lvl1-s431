@@ -3,8 +3,7 @@
 update-build-run: update build run
 
 update:
-	./mvnw versions:update-properties
-	./mvnw versions:display-plugin-updates
+	./mvnw versions:update-properties versions:display-plugin-updates
 
 run:
 	java -jar ./target/Casino-1.0-SNAPSHOT-jar-with-dependencies.jar
