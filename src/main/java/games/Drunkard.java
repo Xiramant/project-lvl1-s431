@@ -1,14 +1,8 @@
 package games;
 
-import static org.apache.commons.math3.util.MathArrays.shuffle;
+import static games.CardUtils.*;
 
 public class Drunkard {
-
-    //количество карт одной масти в колоде
-    private static final int PARS_TOTAL_COUNT = Par.values().length;
-
-    //количество карт в колоде
-    private static final int CARDS_TOTAL_COUNT = PARS_TOTAL_COUNT * Suit.values().length;
 
     //массив карт 2-х игроков
     private static int[][] playersCards = new int[2][CARDS_TOTAL_COUNT];
@@ -22,10 +16,8 @@ public class Drunkard {
 
     public static void main(String... __) {
 
-        //полная колода карт
-        int[] cardsFull = cardsFull();
-
-        shuffle(cardsFull);
+        //полная колода перемешанных карт
+        int[] cardsFull = getShaffledCards();
 
         for (int i = 0; i < 2; i++) {
             playersCards[i] = cardsFull.clone();
@@ -44,12 +36,12 @@ public class Drunkard {
             cardsForComparison[0] = playersCards[0][playersCardsBeginCursors[0]];
             playersCardsBeginCursors[0] = incrementIndex(playersCardsBeginCursors[0]);
 
-            System.out.print("Игрок №1 карта: " + toString(cardsForComparison[0]) + ";");
+            System.out.print("Игрок №1 карта: " + CardUtils.toString(cardsForComparison[0]) + ";");
 
             cardsForComparison[1] = playersCards[1][playersCardsBeginCursors[1]];
             playersCardsBeginCursors[1] = incrementIndex(playersCardsBeginCursors[1]);
 
-            System.out.print(" Игрок №2 карта: " + toString(cardsForComparison[1]) + ".");
+            System.out.print(" Игрок №2 карта: " + CardUtils.toString(cardsForComparison[1]) + ".");
 
             //выигрыш первого игрока
             if (findWinCard(getPar(cardsForComparison[0]), getPar(cardsForComparison[1])) == 1) {
@@ -110,20 +102,6 @@ public class Drunkard {
 
     }
 
-    //получение масти по порядковому номеру карты
-    private static Suit getSuit(final int cardNumber) {
-        return Suit.values()[cardNumber / PARS_TOTAL_COUNT];
-    }
-
-    //получение номинала карты по порядковому номеру карты
-    private static Par getPar(final int cardNumber) {
-        return Par.values()[cardNumber % PARS_TOTAL_COUNT];
-    }
-
-    private static String toString(final int cardNumber) {
-        return getPar(cardNumber) + " " + getSuit(cardNumber);
-    }
-
     //изменение индекса начала/конца колоды
     private static int incrementIndex(final int i) {
         return (i + 1) % CARDS_TOTAL_COUNT;
@@ -134,18 +112,6 @@ public class Drunkard {
 
         return indexEnd - indexBegin + 1 +
                 ((indexEnd >= indexBegin) ? 0: CARDS_TOTAL_COUNT);
-    }
-
-    //получение массива полной колоды карт
-    private static int[] cardsFull() {
-
-        int[] cardsFull = new int[CARDS_TOTAL_COUNT];
-
-        for (int i = 0; i < CARDS_TOTAL_COUNT; i++) {
-            cardsFull[i] = i;
-        }
-
-        return cardsFull;
     }
 
     //возврат карты игроку
