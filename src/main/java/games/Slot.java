@@ -5,9 +5,6 @@ import java.util.Random;
 //основной класс игры Однорукий бандит
 public class Slot {
 
-    //капитал игрока
-    private static int stack = 100;
-
     //размер ставки
     private static final int BET = 10;
 
@@ -20,32 +17,27 @@ public class Slot {
     //количество позиций у барабанов
     private static final int DRUM_POSITION_COUNT = 7;
 
-    public static int getStack() {
-        return stack;
-    }
-
-    public static void setStack(final int stackChange) {
-        stack += stackChange;
-    }
-
     public static void main(String... __) {
+
+        //капитал игрока
+        int stack = 100;
 
         //массив состояний барабанов
         int[] drums = new int[DRUM_COUNT];
 
-        while (getStack() > 0) {
+        while (stack > 0) {
 
             System.out.println(System.lineSeparator()
-                    + "У Вас " + getStack() + "$"
+                    + "У Вас " + stack + "$"
                     + ", ставка - " + BET + "$");
 
-            setStack(-BET);
+            stack -= BET;
 
             System.out.println("Крутим барабаны!");
 
             for (int i = 0; i < drums.length; i++) {
 
-                drums[i] = getDrumPosition(drums[i]);
+                drums[i] = (drums[i] + new Random().nextInt(100)) % DRUM_POSITION_COUNT;
             }
 
             System.out.println("Розыгрыш принёс следующие результаты:");
@@ -55,37 +47,30 @@ public class Slot {
                 System.out.print((i == drums.length - 1) ? "." + System.lineSeparator() : ", ");
             }
 
-            if (isWin(drums)) {
-                setStack(WIN);
+            //флаг выигрыша
+            boolean isWin = true;
+
+            //позиция первого барабана
+            // для определения наличия выигрыша
+            int drumPositionFirst = drums[0];
+
+            for (int drum :drums) {
+
+                if (drum != drumPositionFirst) {
+                    isWin = false;
+                    break;
+                }
+            }
+
+            if (isWin) {
+                stack += WIN;
                 System.out.print("Выигрыш " + WIN + "$");
             } else {
                 System.out.print("Проигрыш " + BET + "$");
             }
 
             System.out.print(", ваш капитал теперь составляет: "
-                    + getStack() + "$" + System.lineSeparator());
+                    + stack + "$" + System.lineSeparator());
         }
     }
-
-    //получение новой позиции барабана
-    private static int getDrumPosition(final int drumPositionInitial) {
-
-        return (drumPositionInitial + new Random().nextInt(100)) % DRUM_POSITION_COUNT;
-    }
-
-    //проверка выигрыша (совпадения позиций барабанов)
-    private static boolean isWin(final int[] drums) {
-
-        int drumPositionFirst = drums[0];
-
-        for (int drum :drums) {
-
-            if (drum != drumPositionFirst) {
-                return false;
-            }
-        }
-
-        return true;
-    }
-
 }
