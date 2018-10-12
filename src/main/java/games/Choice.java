@@ -1,14 +1,18 @@
 package games;
 
 import java.io.IOException;
+import org.slf4j.Logger;
 
 public class Choice {
+
+    private static final Logger log = org.slf4j.LoggerFactory.getLogger(Choice.class);
 
     static final String LINE_SEPARATOR = System.getProperty("line.separator");
 
     public static void main(String... __) {
 
-        System.out.println("Выберите игру:\n" +
+        log.info(System.lineSeparator() +
+                "Выберите игру:" + System.lineSeparator() +
                 "1 - \"однорукий бандит\", " +
                 "2 - \"пьяница\", " +
                 "3 - \"очко\"");
@@ -25,7 +29,7 @@ public class Choice {
                     BlackJack.main();
                     break;
                 default:
-                    System.out.println("Игры с таким номером нет!");
+                    log.info("Игры с таким номером нет!");
             }
         } catch (IOException e) {}
 
