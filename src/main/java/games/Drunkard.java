@@ -5,33 +5,20 @@ import static games.CardUtils.*;
 public class Drunkard {
 
     //массив карт 2-х игроков
-    private static int[][] playersCards = new int[2][CARDS_TOTAL_COUNT];
+    private static int[][] playersCards = new int[2][CARDS_TOTAL_COUNT + 1];
 
     //массивы указателей на карты игроков
-    private static int[] playersCardsBeginCursors = new int[2];
-    private static int[] playersCardsEndCursors = new int[2];
+    private static int[] playersCardsBeginCursors = {0, 0};
+    private static int[] playersCardsEndCursors = {18, 18};
 
     //массив карт для сравнения
     private static int[] cardsForComparison = new int[2];
 
     public static void main(String... __) {
 
-        //полная колода перемешанных карт
-        int[] cardsFull = getShaffledCards();
+        initialGame();
 
-        for (int i = 0; i < 2; i++) {
-            playersCards[i] = cardsFull.clone();
-        }
-
-        playersCardsBeginCursors[0] = 0;
-        playersCardsEndCursors[0] = 17;
-
-        playersCardsBeginCursors[1] = 18;
-        playersCardsEndCursors[1] = 35;
-
-        int cardCountPlayer1 = 18;
-
-        while (cardCountPlayer1 != 0 && cardCountPlayer1 != 36) {
+        while (findCardsNumber(0) != 0 && findCardsNumber(1) != 0) {
 
             cardsForComparison[0] = playersCards[0][playersCardsBeginCursors[0]];
             playersCardsBeginCursors[0] = incrementIndex(playersCardsBeginCursors[0]);
@@ -49,15 +36,8 @@ public class Drunkard {
                 receiveCard(cardsForComparison[0], 0);
                 receiveCard(cardsForComparison[1], 0);
 
-                cardCountPlayer1++;
-
                 System.out.print(" Выиграл игрок 1!");
-                System.out.print(" У игрока №1 " +
-                        findCardsNumber(playersCardsBeginCursors[0], playersCardsEndCursors[0]) +
-                        " карт,");
-                System.out.println(" у игрока №2 " +
-                        findCardsNumber(playersCardsBeginCursors[1], playersCardsEndCursors[1]) +
-                        " карт");
+                playersCardsPrint();
 
                 continue;
             }
@@ -69,12 +49,7 @@ public class Drunkard {
                 receiveCard(cardsForComparison[1], 1);
 
                 System.out.print(" Спор - каждый остаётся при своих!");
-                System.out.print(" У игрока №1 " +
-                        findCardsNumber(playersCardsBeginCursors[0], playersCardsEndCursors[0]) +
-                        " карт,");
-                System.out.println(" у игрока №2 " +
-                        findCardsNumber(playersCardsBeginCursors[1], playersCardsEndCursors[1]) +
-                        " карт");
+                playersCardsPrint();
 
                 continue;
             }
@@ -83,35 +58,24 @@ public class Drunkard {
             receiveCard(cardsForComparison[0], 1);
             receiveCard(cardsForComparison[1], 1);
 
-            cardCountPlayer1--;
-
             System.out.print(" Выиграл игрок 2!");
-            System.out.print(" У игрока №1 " +
-                    findCardsNumber(playersCardsBeginCursors[0], playersCardsEndCursors[0]) +
-                    " карт,");
-            System.out.println(" у игрока №2 " +
-                    findCardsNumber(playersCardsBeginCursors[1], playersCardsEndCursors[1]) +
-                    " карт");
+            playersCardsPrint();
+
         }
 
-        if (cardCountPlayer1 == 36) {
-            System.out.println("Победил первый игрок!");
-        } else {
-            System.out.println("Победил второй игрок!");
-        }
-
+        System.out.println((findCardsNumber(0) == 36) ? "Победил первый игрок!" : "Победил второй игрок!");
     }
 
     //изменение индекса начала/конца колоды
     private static int incrementIndex(final int i) {
-        return (i + 1) % CARDS_TOTAL_COUNT;
+        return (i + 1) % (CARDS_TOTAL_COUNT + 1);
     }
 
     //получение количества карт у игрока
-    private static int findCardsNumber(final int indexBegin, final int indexEnd) {
+    private static int findCardsNumber(final int player) {
 
-        return indexEnd - indexBegin + 1 +
-                ((indexEnd >= indexBegin) ? 0: CARDS_TOTAL_COUNT);
+        return playersCardsEndCursors[player] - playersCardsBeginCursors[player] +
+                ((playersCardsEndCursors[player] >= playersCardsBeginCursors[player]) ? 0: CARDS_TOTAL_COUNT + 1);
     }
 
     //возврат карты игроку
@@ -119,6 +83,17 @@ public class Drunkard {
 
         playersCards[player][playersCardsEndCursors[player]] = card;
         playersCardsEndCursors[player] = incrementIndex(playersCardsEndCursors[player]);
+    }
+
+    //Раздача карт игрокам
+    private static void initialGame() {
+
+        int[] cardsFull = getShaffledCards();
+
+        for (int i = 0; i <= 17; i++) {
+            playersCards[0][i] = cardsFull[i];
+            playersCards[1][i] = cardsFull[i + 18];
+        }
     }
 
     //проверка на выигрыш первой карты по сравнению со второй по правилам пьяницы
@@ -140,4 +115,13 @@ public class Drunkard {
         return -1;
     }
 
+    //Печать количества карт у каждого игрока
+    private static void playersCardsPrint() {
+        System.out.print(" У игрока №1 " +
+                findCardsNumber(0) +
+                " карт,");
+        System.out.println(" у игрока №2 " +
+                findCardsNumber(1) +
+                " карт");
+    }
 }
