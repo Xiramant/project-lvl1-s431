@@ -1,5 +1,7 @@
 package games;
 
+import java.util.function.Predicate;
+
 import static games.CardUtils.*;
 
 public class Drunkard {
@@ -102,17 +104,13 @@ public class Drunkard {
     // -1 - выигрыш 2 карты
     private static int findWinCard(final Par card1, final Par card2) {
 
-        if (card1.compareTo(card2) > 0 ||
-                (card1.equals(Par.SIX) && card2.equals(Par.ACE))) {
+        Predicate<Par> isSIX = (p) -> p.equals(Par.SIX);
+        Predicate<Par> isACE = (p) -> p.equals(Par.ACE);
 
-            if (! (card1.equals(Par.ACE) && card2.equals(Par.SIX))) {
-                return 1;
-            }
-        }
-
-        if (card1.compareTo(card2) == 0) return 0;
-
-        return -1;
+        return (card1.compareTo(card2) == 0) ? 0 :
+                (isSIX.test(card1) && isACE.test(card2)) ? 1:
+                        (isACE.test(card1) && isSIX.test(card2)) ? -1 :
+                                (card1.compareTo(card2) > 0) ? 1 : -1;
     }
 
     //Печать количества карт у каждого игрока
