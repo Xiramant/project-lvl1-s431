@@ -1,9 +1,12 @@
 package games;
 
 import java.util.Random;
+import org.slf4j.Logger;
 
 //основной класс игры Однорукий бандит
 public class Slot {
+
+    private static final Logger log = org.slf4j.LoggerFactory.getLogger(Slot.class);
 
     //размер ставки
     private static final int BET = 10;
@@ -19,6 +22,8 @@ public class Slot {
 
     public static void main(String... __) {
 
+        StringBuffer message = new StringBuffer();
+
         //капитал игрока
         int stack = 100;
 
@@ -27,25 +32,30 @@ public class Slot {
 
         while (stack > 0) {
 
-            System.out.println(System.lineSeparator()
-                    + "У Вас " + stack + "$"
+            log.info("У Вас " + stack + "$"
                     + ", ставка - " + BET + "$");
 
             stack -= BET;
 
-            System.out.println("Крутим барабаны!");
+            message.append("Крутим барабаны!");
 
             for (int i = 0; i < drums.length; i++) {
 
                 drums[i] = (drums[i] + new Random().nextInt(100)) % DRUM_POSITION_COUNT;
             }
 
-            System.out.println("Розыгрыш принёс следующие результаты:");
+            message.append(" Розыгрыш принёс следующие результаты:");
+
+            log.info(message.toString());
+            message.setLength(0);
 
             for (int i = 0; i < drums.length; i++) {
-                System.out.print((i + 1) + "-й барабан - " + drums[i]);
-                System.out.print((i == drums.length - 1) ? "." + System.lineSeparator() : ", ");
+                message.append((i + 1) + "-й барабан - " + drums[i]);
+                message.append((i == drums.length - 1) ? "." : ", ");
             }
+
+            log.info(message.toString());
+            message.setLength(0);
 
             //флаг выигрыша
             boolean isWin = true;
@@ -64,13 +74,16 @@ public class Slot {
 
             if (isWin) {
                 stack += WIN;
-                System.out.print("Выигрыш " + WIN + "$");
+                message.append("Выигрыш " + WIN + "$");
             } else {
-                System.out.print("Проигрыш " + BET + "$");
+                message.append("Проигрыш " + BET + "$");
             }
 
-            System.out.print(", ваш капитал теперь составляет: "
+            message.append(", ваш капитал теперь составляет: "
                     + stack + "$" + System.lineSeparator());
+
+            log.info(message.toString());
+            message.setLength(0);
         }
     }
 }
