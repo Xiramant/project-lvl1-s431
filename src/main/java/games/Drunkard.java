@@ -1,10 +1,14 @@
 package games;
 
-import java.util.function.Predicate;
+import org.slf4j.Logger;
 
 import static games.CardUtils.*;
 
 public class Drunkard {
+
+    private static final Logger log = org.slf4j.LoggerFactory.getLogger(Drunkard.class);
+
+    private static StringBuffer message = new StringBuffer();
 
     //массив карт 2-х игроков
     private static int[][] playersCards = new int[2][CARDS_TOTAL_COUNT + 1];
@@ -18,6 +22,8 @@ public class Drunkard {
 
     public static void main(String... __) {
 
+
+        
         initialGame();
 
         while (findCardsNumber(0) != 0 && findCardsNumber(1) != 0) {
@@ -25,12 +31,12 @@ public class Drunkard {
             cardsForComparison[0] = playersCards[0][playersCardsBeginCursors[0]];
             playersCardsBeginCursors[0] = incrementIndex(playersCardsBeginCursors[0]);
 
-            System.out.print("Игрок №1 карта: " + CardUtils.toString(cardsForComparison[0]) + ";");
+            message.append("Игрок №1 карта: " + CardUtils.toString(cardsForComparison[0]) + ";");
 
             cardsForComparison[1] = playersCards[1][playersCardsBeginCursors[1]];
             playersCardsBeginCursors[1] = incrementIndex(playersCardsBeginCursors[1]);
 
-            System.out.print(" Игрок №2 карта: " + CardUtils.toString(cardsForComparison[1]) + ".");
+            message.append(" Игрок №2 карта: " + CardUtils.toString(cardsForComparison[1]) + ".");
 
             //выигрыш первого игрока
             if (findWinCard(getPar(cardsForComparison[0]), getPar(cardsForComparison[1])) == 1) {
@@ -38,8 +44,11 @@ public class Drunkard {
                 receiveCard(cardsForComparison[0], 0);
                 receiveCard(cardsForComparison[1], 0);
 
-                System.out.print(" Выиграл игрок 1!");
+                message.append(" Выиграл игрок 1!");
                 playersCardsPrint();
+
+                log.info(message.toString());
+                message.setLength(0);
 
                 continue;
             }
@@ -50,8 +59,11 @@ public class Drunkard {
                 receiveCard(cardsForComparison[0], 0);
                 receiveCard(cardsForComparison[1], 1);
 
-                System.out.print(" Спор - каждый остаётся при своих!");
+                message.append(" Спор - каждый остаётся при своих!");
                 playersCardsPrint();
+
+                log.info(message.toString());
+                message.setLength(0);
 
                 continue;
             }
@@ -60,12 +72,14 @@ public class Drunkard {
             receiveCard(cardsForComparison[0], 1);
             receiveCard(cardsForComparison[1], 1);
 
-            System.out.print(" Выиграл игрок 2!");
+            message.append(" Выиграл игрок 2!");
             playersCardsPrint();
 
+            log.info(message.toString());
+            message.setLength(0);
         }
 
-        System.out.println((findCardsNumber(0) == 36) ? "Победил первый игрок!" : "Победил второй игрок!");
+        log.info(((findCardsNumber(0) == 36) ? "Победил первый игрок!" : "Победил второй игрок!"));
     }
 
     //изменение индекса начала/конца колоды
@@ -104,21 +118,18 @@ public class Drunkard {
     // -1 - выигрыш 2 карты
     private static int findWinCard(final Par card1, final Par card2) {
 
-        Predicate<Par> isSIX = (p) -> p.equals(Par.SIX);
-        Predicate<Par> isACE = (p) -> p.equals(Par.ACE);
-
         return (card1.compareTo(card2) == 0) ? 0 :
-                (isSIX.test(card1) && isACE.test(card2)) ? 1:
-                        (isACE.test(card1) && isSIX.test(card2)) ? -1 :
+                (card1.equals(Par.SIX) && card2.equals(Par.ACE)) ? 1:
+                        (card1.equals(Par.ACE) && card2.equals(Par.SIX)) ? -1 :
                                 (card1.compareTo(card2) > 0) ? 1 : -1;
     }
 
     //Печать количества карт у каждого игрока
     private static void playersCardsPrint() {
-        System.out.print(" У игрока №1 " +
+        message.append(" У игрока №1 " +
                 findCardsNumber(0) +
                 " карт,");
-        System.out.println(" у игрока №2 " +
+        message.append(" у игрока №2 " +
                 findCardsNumber(1) +
                 " карт");
     }
