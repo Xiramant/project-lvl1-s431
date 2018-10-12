@@ -25,7 +25,7 @@ public class BlackJack {
     //Максимальное количество карт у игрока/компьютера
     private static final int MAX_CARDS_COUNT = 8;
 
-    public static void main(String... __) {
+    public static void main(String... __) throws IOException {
 
         while (playersMoney[0] != 0 &&
                 playersMoney[1] != 0) {
@@ -37,16 +37,14 @@ public class BlackJack {
 
             while (true) {
 
-                try {
-                    if (sum(0) < 20) {
-                        if (!confirm("Берём ещё?")) {
-                            break;
-                        }
-                        addCard2Player(0);
-                    } else {
+                if (sum(0) < 20) {
+                    if (!confirm("Берём ещё?")) {
                         break;
                     }
-                } catch (IOException e) {}
+                    addCard2Player(0);
+                } else {
+                    break;
+                }
             }
 
             addCard2Player(1);
