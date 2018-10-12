@@ -1,4 +1,5 @@
 /target/
+/logs/
 /**/maven-wrapper.jar
 /**/MavenWrapperDownloader.java
 pom.xml.versionsBackup
