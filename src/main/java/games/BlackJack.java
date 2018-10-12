@@ -1,8 +1,11 @@
 package games;
 
 import java.io.IOException;
+import org.slf4j.Logger;
 
 public class BlackJack {
+
+    private static final Logger log = org.slf4j.LoggerFactory.getLogger(BlackJack.class);
 
     // Основная колода
     private static int[] cards;
@@ -35,16 +38,8 @@ public class BlackJack {
             addCard2Player(0);
             addCard2Player(0);
 
-            while (true) {
-
-                if (sum(0) < 20) {
-                    if (!confirm("Берём ещё?")) {
-                        break;
-                    }
-                    addCard2Player(0);
-                } else {
-                    break;
-                }
+            while (sum(0) < 20 && confirm("Берём ещё?")) {
+                addCard2Player(0);
             }
 
             addCard2Player(1);
@@ -52,12 +47,12 @@ public class BlackJack {
 
             if (getFinalSum(0) != 0) {
                 while (sum(1) < 17) {
-                    System.out.print("Компьютер решил взять ещё карту. ");
+                    log.info("Компьютер решил взять ещё карту. ");
                     addCard2Player(1);
                 }
             }
 
-            System.out.println("Сумма ваших очков - " + getFinalSum(0) +
+            log.info("Сумма ваших очков - " + getFinalSum(0) +
                     ", компьютера - " + getFinalSum(1));
 
             if (getFinalSum(0) > getFinalSum(1)) {
@@ -65,7 +60,7 @@ public class BlackJack {
                 playersMoney[0] += 10;
                 playersMoney[1] -= 10;
 
-                System.out.println("Вы выиграли раунд! Получаете 10$");
+                log.info("Вы выиграли раунд! Получаете 10$" + System.lineSeparator());
 
                 continue;
             }
@@ -75,18 +70,18 @@ public class BlackJack {
                 playersMoney[0] -= 10;
                 playersMoney[1] += 10;
 
-                System.out.println("Вы проиграли раунд! Теряете 10$");
+                log.info("Вы проиграли раунд! Теряете 10$" + System.lineSeparator());
 
                 continue;
             }
 
-            System.out.println("Ничья! Вы остаетесь при своих деньгах");
+            log.info("Ничья! Вы остаетесь при своих деньгах" + System.lineSeparator());
         }
 
         if (playersMoney[0] > 0)
-            System.out.println("Вы выиграли! Поздравляем!");
+            log.info("Вы выиграли! Поздравляем!");
         else
-            System.out.println("Вы проиграли! Соболезнуем!");
+            log.info("Вы проиграли! Соболезнуем!");
 
     }
 
@@ -110,12 +105,13 @@ public class BlackJack {
     // Инициализация переменных в начале раунда
     private static void initRound() {
 
-        System.out.println("\nУ Вас " + playersMoney[0] +
+        log.info("У Вас " + playersMoney[0] +
                 "$, у компьютера - " + playersMoney[1] +
                 "$. Начинаем новый раунд!");
 
         cards = CardUtils.getShaffledCards();
         playersCards = new int[2][MAX_CARDS_COUNT];
+        cursor = 0;
         playersCursors = new int[]{0, 0};
     }
 
@@ -125,9 +121,9 @@ public class BlackJack {
         playersCards[player][playersCursors[player]] = cards[cursor];
 
         if (player == 0) {
-            System.out.println("Вам выпала карта " + CardUtils.toString(cards[cursor]));
+            log.info("Вам выпала карта " + CardUtils.toString(cards[cursor]));
         } else {
-            System.out.println("Компьютеру выпала карта " + CardUtils.toString(cards[cursor]));
+            log.info("Компьютеру выпала карта " + CardUtils.toString(cards[cursor]));
         }
 
         cursor++;
@@ -156,8 +152,7 @@ public class BlackJack {
     //Подтверждение на вопрос - берете ли вы карту?
     private static boolean confirm(String message) throws IOException {
 
-        System.out.println(message + " \"Y\" - Да, " +
-                "{любой другой символ} - нет (Что бы выйти из игры, нажмите Ctrl + C)");
+        log.info(message + " \"Y\" - Да, " + "{любой другой символ} - нет (Что бы выйти из игры, нажмите Ctrl + C)");
 
         switch (Choice.getCharacterFromUser()) {
             case 'Y':
