@@ -28,6 +28,9 @@ public class BlackJack {
     //Максимальное количество карт у игрока/компьютера
     private static final int MAX_CARDS_COUNT = 8;
 
+    //количество очков после которого не стоит брать карту
+    private static final int BREAK_POINT = 17;
+
     public static void main(String... __) throws IOException {
 
         while (playersMoney[0] != 0 &&
@@ -35,21 +38,15 @@ public class BlackJack {
 
             initRound();
 
-            addCard2Player(0);
-            addCard2Player(0);
-
-            while (sum(0) < 20 && confirm("Берём ещё?")) {
+            while (playersCursors[0] < 2 ||
+                    (sum(0) < 20 && confirm("Берём ещё?"))) {
                 addCard2Player(0);
             }
 
-            addCard2Player(1);
-            addCard2Player(1);
-
-            if (getFinalSum(0) != 0) {
-                while (sum(1) < 17) {
-                    log.info("Компьютер решил взять ещё карту. ");
-                    addCard2Player(1);
-                }
+            while (playersCursors[1] < 2 ||
+                    (getFinalSum(0) != 0 && sum(1) < BREAK_POINT)) {
+                if (!(playersCursors[1] < 2)) log.info("Компьютер решил взять ещё карту.");
+                addCard2Player(1);
             }
 
             log.info("Сумма ваших очков - " + getFinalSum(0) +
