@@ -9,7 +9,7 @@ public class Choice {
 
     static final String LINE_SEPARATOR = System.getProperty("line.separator");
 
-    public static void main(String... __) {
+    public static void main(String... __) throws IOException{
 
         log.info(System.lineSeparator() +
                 "Выберите игру:" + System.lineSeparator() +
@@ -17,22 +17,19 @@ public class Choice {
                 "2 - \"пьяница\", " +
                 "3 - \"очко\"");
 
-        try {
-            switch(getCharacterFromUser()) {
-                case '1':
-                    Slot.main();
-                    break;
-                case '2':
-                    Drunkard.main();
-                    break;
-                case '3':
-                    BlackJack.main();
-                    break;
-                default:
-                    log.info("Игры с таким номером нет!");
-            }
-        } catch (IOException e) {}
-
+        switch(getCharacterFromUser()) {
+            case '1':
+                Slot.main();
+                break;
+            case '2':
+                Drunkard.main();
+                break;
+            case '3':
+                BlackJack.main();
+                break;
+            default:
+                log.info("Игры с таким номером нет!");
+        }
     }
 
     static char getCharacterFromUser() throws IOException {
