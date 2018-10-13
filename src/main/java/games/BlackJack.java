@@ -31,6 +31,9 @@ public class BlackJack {
     //количество очков после которого не стоит брать карту
     private static final int BREAK_POINT = 17;
 
+    //начальное количество раздаваемых карт
+    private static final int BEGIN_CARDS_NUMBER = 2;
+
     public static void main(String... __) throws IOException {
 
         while (playersMoney[0] != 0 &&
@@ -38,12 +41,12 @@ public class BlackJack {
 
             initRound();
 
-            while (playersCursors[0] < 2 ||
+            while (playersCursors[0] < BEGIN_CARDS_NUMBER ||
                     (sum(0) < 20 && confirm("Берём ещё?"))) {
                 addCard2Player(0);
             }
 
-            while (playersCursors[1] < 2 ||
+            while (playersCursors[1] < BEGIN_CARDS_NUMBER ||
                     (getFinalSum(0) != 0 && sum(1) < BREAK_POINT)) {
                 if (!(playersCursors[1] < 2)) log.info("Компьютер решил взять ещё карту.");
                 addCard2Player(1);
